@@ -18,8 +18,8 @@ from linebot.models import (
 app = Flask(__name__)
 file_path = "/images"
 # 環境変数からchannel_secret・channel_access_tokenを取得
-channel_secret = os.environ['CHANNEL_SECRET']
-channel_access_token = os.environ['CHANNEL_ACCESS_TOKEN']
+channel_secret = os.environ['DOG_BOT_CHANNEL_SECRET']
+channel_access_token = os.environ['DOG_BOT_CHANNEL_ACCESS_TOKEN']
 
 if channel_secret is None:
     print('Specify CHANNEL_SECRET as environment variable.')
@@ -133,4 +133,4 @@ def handle_image(event):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5001)
