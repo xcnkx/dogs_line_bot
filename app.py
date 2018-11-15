@@ -56,7 +56,7 @@ def predict(image):
     predicts = model.predict(x.reshape([-1,448,448,3]))
     top3 = predicts.argsort()[2::-1]
     top3_acc = predicts.sort()[2::-1]
-    return top3, top3_acc
+    return predicts
 
 
 @app.route("/")

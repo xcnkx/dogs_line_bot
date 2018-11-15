@@ -1,2 +1,2 @@
 rm .git/hooks/pre-push
-web: gunicorn app:app --log-file -
+web: gunicorn -k sync app:app --log-file -
