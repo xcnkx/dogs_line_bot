@@ -97,12 +97,24 @@ def handle_image(event):
     message_content = line_bot_api.get_message_content(message_id)
     image = BytesIO(message_content.content)
 
+    top3_index, top3_acc = predict(image)
+
+    message = "This dog is:\n" + classes[top3_index[0]] + "  acc."+ str(float(top3_acc[0])) + "\n" + \
+              classes[top3_index[1]] + "  acc." + str(float(top3_acc[1])) + "\n" +classes[top3_index[2]] + \
+              "  acc." + str(float(top3_acc[2]))
     line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(
-                text="画像を送ったな。"
-            )
+        event.reply_token,
+        TextSendMessage(
+            text=message
+        )
     )
+
+    # line_bot_api.reply_message(
+    #         event.reply_token,
+    #         TextSendMessage(
+    #             text="画像を送ったな。"
+    #         )
+    # )
 
 # @handler.add(MessageEvent, message=ImageMessage)
 # def handle_message(event):
