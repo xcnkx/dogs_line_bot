@@ -111,7 +111,7 @@ def handle_image(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(
-                text="この犬は["+classes[preds.argmax()+"]です。"]
+                text="この犬は["+classes[preds.argmax()]+"]です。"
             )
         )
 
