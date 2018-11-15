@@ -81,12 +81,23 @@ def handle_message(event):
     text = event.message.text
 
     messages = [
-        TextSendMessage(text=text),
         TextSendMessage(text='犬の画像を送ってみて！品種当てちゃうぞ！'),
     ]
 
     line_bot_api.reply_message(event.reply_token, messages)
 
+@handler.add(MessageEvent, messgae=ImageMessage)
+def handle_image(event):
+    message_id = event.message.id
+    message_content = line_bot_api.get_message_content(message_id)
+    image = BytesIO(message_content.content)
+
+    line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="image has been sent"
+            )
+    )
 
 # @handler.add(MessageEvent, message=ImageMessage)
 # def handle_message(event):
