@@ -49,8 +49,8 @@ if model is None:
     load_model()
 
 def predict(image):
-    img = load_img(image)
-    x = img_to_array(img, target_size=(448,448))
+    img = load_img(image,target_size=(448,448))
+    x = img_to_array(img)
     predicts = model.predict(x.reshape([-1,448,448,3]))
     top3 = predicts.argsort()[2::-1]
     top3_acc = predicts.sort()[2::-1]
