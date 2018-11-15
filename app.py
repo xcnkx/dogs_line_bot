@@ -101,7 +101,7 @@ def handle_image(event):
     line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(
-                text="image has been sent"
+                text="画像を送ったな。"
             )
     )
 
