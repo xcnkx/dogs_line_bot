@@ -82,9 +82,6 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    # print("handle_message:", event)
-    text = event.message.text
-
     messages = [
         TextSendMessage(text='犬の画像を送ってみて！品種当てちゃうぞ！'),
     ]
