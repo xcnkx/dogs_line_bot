@@ -85,7 +85,7 @@ def handle_message(event):
         TextSendMessage(text='犬の画像を送ってみて！品種当てちゃうぞ！'),
     ]
 
-    line_bot_api.reply_message(event, messages)
+    line_bot_api.reply_message(event.reply_token, messages)
 
 
 # @handler.add(MessageEvent, message=ImageMessage)
