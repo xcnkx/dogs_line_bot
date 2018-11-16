@@ -1,5 +1,4 @@
-# dogs_line_bot
-## Dogs classification Line bot.
+# Standford Dogs classification Line bot.
 
 A Keras model (at my [fine_grained_classifion repo](https://github.com/xcnkx/fine_grained_classification)) was used in this application.  The model was trained with [Stanford Dogs Dataset](http://vision.stanford.edu/aditya86/ImageNetDogs/).
 
