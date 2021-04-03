@@ -5,7 +5,7 @@ description = "A easy dog recognition app."
 authors = ["cris"]
 
 [tool.poetry.dependencies]
-python = "3.7.1"
+python = "3.7.10"
 Flask = "^1.1.2"
 line-bot-sdk = "^1.19.0"
 tensorflow = "^2.4.1"
