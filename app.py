@@ -1,9 +1,8 @@
 import os
 import sys
 from io import BytesIO
-from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-import tensorflow as tf
 
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
@@ -31,20 +30,8 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-model = None
-graph = None
-
-
-def load_model():
-    # load json and create model
-    global model
-    json_file = open("./model/model.json")
-    loaded_model_json = json_file.read()
-    json_file.close()
-    model = model_from_json(loaded_model_json)
-
-    # load weights into new model
-    model.load_weights("./model/model_weights.h5")
+# load model
+model = load_model("./model/efficient_net_model.h5")
 
 
 classes = [
@@ -170,13 +157,10 @@ classes = [
     "African_hunting_dog",
 ]
 
-if model is None:
-    graph = tf.get_default_graph()
-    load_model()
+model = load_model()
 
 
 def predict(image):
-    global model
     img = load_img(image, target_size=(448, 448))
     x = img_to_array(img)
     x /= 255
@@ -219,49 +203,16 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global graph
-    with graph.as_default():
-        message_id = event.message.id
-        message_content = line_bot_api.get_message_content(message_id)
-        image = BytesIO(message_content.content)
+    message_id = event.message.id
+    message_content = line_bot_api.get_message_content(message_id)
+    image = BytesIO(message_content.content)
 
-        # top3_index, top3_acc = predict(image)
-        preds = predict(image)
+    preds = predict(image)
 
-        # message = "This dog is:\n" + classes[top3_index[0]] + "  acc."+ str(float(top3_acc[0])) + "\n" + \
-        #          classes[top3_index[1]] + "  acc." + str(float(top3_acc[1])) + "\n" +classes[top3_index[2]] + \
-        #          "  acc." + str(float(top3_acc[2]))
-
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="この犬は[" + classes[preds.argmax()] + "]ですね！"),
-        )
-
-        # line_bot_api.reply_message(
-        #         event.reply_token,
-        #         TextSendMessage(
-        #             text="画像を送ったな。"
-        #         )
-        # )
-
-
-# @handler.add(MessageEvent, message=ImageMessage)
-# def handle_message(event):
-#     message_id = event.message.id
-#     message_content = line_bot_api.get_message_content(message_id)
-#
-#     image = BytesIO(message_content.content)
-#     top3_index, top3_acc = predict(image)
-#
-#     message = "This dog is:\n" + classes[top3_index[0]] + "  acc."+ str(float(top3_acc[0])) + "\n" + \
-#               classes[top3_index[1]] + "  acc." + str(float(top3_acc[1])) + "\n" +classes[top3_index[2]] + \
-#               "  acc." + str(float(top3_acc[2]))
-#     line_bot_api.reply_message(
-#         event.reply_token,
-#         TextSendMessage(
-#             text=message
-#         )
-#     )
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="この犬は[" + classes[preds.argmax()] + "]ですね！"),
+    )
 
 
 if __name__ == "__main__":
