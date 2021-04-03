@@ -10,6 +10,7 @@ Flask = "^1.1.2"
 line-bot-sdk = "^1.19.0"
 tensorflow-cpu = "^2.4.1"
 wheel = "0.35"
+efficientnet = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.0"

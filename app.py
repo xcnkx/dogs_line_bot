@@ -3,6 +3,7 @@ import sys
 from io import BytesIO
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import efficientnet.tfkeras
 
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
@@ -31,7 +32,9 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 # load model
-model = load_model("./model/efficient_net_model.h5")
+model = load_model(
+    "./model/efficient_net_model.h5"
+)
 
 
 classes = [
@@ -157,14 +160,12 @@ classes = [
     "African_hunting_dog",
 ]
 
-model = load_model()
-
 
 def predict(image):
-    img = load_img(image, target_size=(448, 448))
+    img = load_img(image, target_size=(224, 224))
     x = img_to_array(img)
     x /= 255
-    predicts = model.predict(x.reshape([-1, 448, 448, 3]))
+    predicts = model.predict(x.reshape([-1, 224, 224, 3]))
 
     return predicts[1]
 
