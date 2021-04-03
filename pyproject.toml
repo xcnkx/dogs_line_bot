@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "dogs_line_bot"
+version = "0.1.0"
+description = "A easy dog recognition app."
+authors = ["cris"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Flask = "^1.1.2"
+line-bot-sdk = "^1.19.0"
+tensorflow = "^2.4.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.9.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
