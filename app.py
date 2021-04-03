@@ -217,4 +217,5 @@ def handle_image(event):
 
 
 if __name__ == "__main__":
-    app.run(port=5001)
+    port = os.environ.get('PORT', 5000)
+    app.run(port=port)
