@@ -32,9 +32,7 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 # load model
-model = load_model(
-    "./model/efficient_net_model.h5"
-)
+model = load_model("./model/efficient_net_model.h5")
 
 
 classes = [
@@ -217,5 +215,5 @@ def handle_image(event):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
