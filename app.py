@@ -2,8 +2,10 @@ import os
 import sys
 from io import BytesIO
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import img_to_array
 import efficientnet.tfkeras
+
+from PIL import Image
 
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
@@ -159,13 +161,14 @@ classes = [
 ]
 
 
-def predict(image):
-    img = load_img(image, target_size=(224, 224))
+def predict(input_image):
+    img = Image.open(input_image)
+    img = img.resize((224, 224), Image.NEAREST)
     x = img_to_array(img)
     x /= 255
-    predicts = model.predict(x.reshape([-1, 224, 224, 3]))
-
-    return predicts[1]
+    result = model.predict(x.reshape([-1, 224, 224, 3]))
+    predicted = result.argmax()
+    return classes[predicted]
 
 
 @app.route("/")
@@ -206,11 +209,11 @@ def handle_image(event):
     message_content = line_bot_api.get_message_content(message_id)
     image = BytesIO(message_content.content)
 
-    preds = predict(image)
+    pred = predict(image)
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="この犬は[" + classes[preds.argmax()] + "]ですね！"),
+        TextSendMessage(text=f"この犬は[{pred}]ですね！"),
     )
 
 
