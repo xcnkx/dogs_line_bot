@@ -7,7 +7,7 @@ import efficientnet.tfkeras
 
 from PIL import Image
 
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template, redirect, flash
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
@@ -171,9 +171,32 @@ def predict(input_image):
     return classes[predicted]
 
 
-@app.route("/")
-def hello_world():
-    return "hello world!"
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route("/", methods=["GET", "POST"])
+def upload_file():
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("ファイルがありません")
+            return redirect(request.url)
+        file = request.files["file"]
+        if file.filename == "":
+            flash("ファイルがありません")
+            return redirect(request.url)
+
+        image = BytesIO(file.stream.read())
+        pred = predict(image)
+        pred_answer = f"この犬は[{pred}]ですね！"
+
+        return render_template("index.html", answer=pred_answer)
+
+    return render_template("index.html", answer="")
 
 
 @app.route("/callback", methods=["POST"])
