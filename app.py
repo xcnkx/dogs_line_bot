@@ -22,6 +22,7 @@ file_path = "/images"
 # 環境変数からchannel_secret・channel_access_tokenを取得
 channel_secret = os.environ["DOG_BOT_CHANNEL_SECRET"]
 channel_access_token = os.environ["DOG_BOT_CHANNEL_ACCESS_TOKEN"]
+app.secret_key = __name__
 
 if channel_secret is None:
     print("Specify CHANNEL_SECRET as environment variable.")
@@ -183,12 +184,12 @@ def allowed_file(filename):
 def upload_file():
     if request.method == "POST":
         if "file" not in request.files:
-            flash("ファイルがありません")
-            return redirect(request.url)
+            alert = "ファイルがありません"
+            return render_template("index.html", alert=alert)
         file = request.files["file"]
         if file.filename == "":
-            flash("ファイルがありません")
-            return redirect(request.url)
+            alert = "ファイルがありません"
+            return render_template("index.html", alert=alert)
 
         image = BytesIO(file.stream.read())
         pred = predict(image)
@@ -242,4 +243,4 @@ def handle_image(event):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
