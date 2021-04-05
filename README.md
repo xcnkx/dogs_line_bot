@@ -20,4 +20,9 @@ https://dogs-recoginition-app.herokuapp.com/
 ### Model
 EfficientnetB0 was used.
 
+### How to run
 
+```
+make setup
+make run
+```
