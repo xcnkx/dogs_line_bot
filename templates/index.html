@@ -29,6 +29,9 @@
             </div>
             <div class="card-body">
                 {% if answer %}
+                <div>
+                    <img src="../static/images/cache/{{ file_name }}" alt="uploaded_image" class="img-fluid">
+                </div>
                 <div class="alert alert-primary" role="alert">
                     <div class="answer">{{answer}}</div>
                 </div>
@@ -44,5 +47,4 @@
             </footer>
         </div>
 </body>
-
 </html>

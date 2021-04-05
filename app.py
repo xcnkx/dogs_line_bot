@@ -1,13 +1,15 @@
 import os
 import sys
+import glob
 from io import BytesIO
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
-import efficientnet.tfkeras
+import efficientnet.tfkeras  # NOQA
 
 from PIL import Image
 
-from flask import Flask, request, abort, render_template, redirect, flash
+from werkzeug.utils import secure_filename
+from flask import Flask, request, abort, render_template
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
@@ -162,22 +164,29 @@ classes = [
 ]
 
 
-def predict(input_image):
-    img = Image.open(input_image)
+def predict(img: Image):
+    # img = Image.open(input_image)
     img = img.resize((224, 224), Image.NEAREST)
     x = img_to_array(img)
     x /= 255
     result = model.predict(x.reshape([-1, 224, 224, 3]))
     predicted = result.argmax()
-    return classes[predicted]
+    proba = result[0, predicted] * 100
+    return classes[predicted], "{:.1f}".format(proba)
 
 
-UPLOAD_FOLDER = "uploads"
+UPLOAD_FOLDER = "static/images/cache"
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def remove_glob(pathname, recursive=True):
+    for p in glob.glob(pathname, recursive=recursive):
+        if os.path.isfile(p):
+            os.remove(p)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -186,16 +195,25 @@ def upload_file():
         if "file" not in request.files:
             alert = "ファイルがありません"
             return render_template("index.html", alert=alert)
+
         file = request.files["file"]
         if file.filename == "":
             alert = "ファイルがありません"
             return render_template("index.html", alert=alert)
 
-        image = BytesIO(file.stream.read())
-        pred = predict(image)
-        pred_answer = f"この犬は[{pred}]ですね！"
+        if file and allowed_file(file.filename):
+            remove_glob("./cache/*")
+            img = BytesIO(file.stream.read())
+            img = Image.open(img)
+            pred, proba = predict(img)
+            pred_answer = f"この犬は{proba}％の確率で[{pred}]ですね！"
 
-        return render_template("index.html", answer=pred_answer)
+            file_name = secure_filename(file.filename)
+            img.save(os.path.join(UPLOAD_FOLDER, file_name))
+
+            return render_template(
+                "index.html", answer=pred_answer, file_name=file_name
+            )
 
     return render_template("index.html", answer="")
 
@@ -233,11 +251,12 @@ def handle_image(event):
     message_content = line_bot_api.get_message_content(message_id)
     image = BytesIO(message_content.content)
 
-    pred = predict(image)
+    image = Image.open(image)
+    pred, proba = predict(image)
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=f"この犬は[{pred}]ですね！"),
+        TextSendMessage(text=f"この犬は{proba}％の確率で[{pred}]ですね！"),
     )
 
 
