@@ -175,7 +175,7 @@ def predict(img: Image):
     return classes[predicted], "{:.1f}".format(proba)
 
 
-UPLOAD_FOLDER = "static/images/cache"
+UPLOAD_FOLDER = "./static/images/cache"
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
 
