@@ -5,13 +5,16 @@ description = "A easy dog recognition app."
 authors = ["cris"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "3.7.10"
 Flask = "^1.1.2"
 line-bot-sdk = "^1.19.0"
-tensorflow = "^2.4.1"
+tensorflow-cpu = "^2.4.1"
+wheel = "0.35"
+efficientnet = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.0"
+black = {version = "^20.8b1", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

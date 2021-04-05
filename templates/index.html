@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dog Recognition bot web app</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+</head>
+
+<body class="bg-secondary">
+    <div class="d-flex p-3 flex-column align-items-center">
+        <div class="card text-white bg-dark text-center mb-3" style="max-width: 36rem;">
+            <div class="card-header">
+                <h2><img class="img-thum" src="../static/images/pet_robot_dog.png" alt="dog bot" height="100">
+                    Dog Recognition Bot </h2>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title"> 犬の画像を送ってください！</h3>
+                <h4 class="card-title"> AIが犬種を推測します</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <input class="file_choose" type="file" name="file">
+                    <input class="btn btn-primary btn" value="submit!" type="submit">
+                </form>
+            </div>
+            <div class="card-body">
+                {% if answer %}
+                <div>
+                    <img src="../static/images/cache/{{ file_name }}" alt="uploaded_image" class="img-fluid">
+                </div>
+                <div class="alert alert-primary" role="alert">
+                    <div class="answer">{{answer}}</div>
+                </div>
+                {% endif %}
+                {% if alert %}
+                <div class="alert alert-danger" role="alert">
+                    <div class="answer">{{alert}}</div>
+                </div>
+                {% endif %}
+                </div>
+            <footer>
+                <small>&copy; github.com/xcnkx</small>
+            </footer>
+        </div>
+</body>
+</html>
