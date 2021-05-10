@@ -12,7 +12,7 @@ You can add this bot from this QR code !
 <img width="253" alt="Screen Shot 2021-04-05 at 22 02 58" src="https://user-images.githubusercontent.com/22892424/113576884-4fcda680-965b-11eb-8ec9-1915ebdcac6e.png">
 
 
-## Web app application
+## Web application
 
 https://dogs-recoginition-app.herokuapp.com/
 
