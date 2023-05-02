@@ -6,7 +6,7 @@ authors = ["cris"]
 
 [tool.poetry.dependencies]
 python = "3.7.10"
-Flask = "^1.1.2"
+Flask = "^2.2.5"
 line-bot-sdk = "^1.19.0"
 tensorflow-cpu = "^2.4.1"
 wheel = "0.35"
